@@ -1,7 +1,7 @@
-import { graphql, PageProps } from "gatsby";
+import { graphql, Link, PageProps } from "gatsby";
 import React from "react";
-import Layout from "../components/Layout";
-import Seo from "../components/Seo";
+import Layout from "../../components/Layout";
+import Seo from "../../components/Seo";
 
 function Blog({ data }: PageProps<Queries.BlogPostsQuery>) {
   console.log(data);
@@ -9,15 +9,18 @@ function Blog({ data }: PageProps<Queries.BlogPostsQuery>) {
     <Layout title="welcome by blog">
       <section>
         {data.allMdx.nodes.map((post, index) => (
-          <article key={index}>
-            <h3>{post.frontmatter?.title}</h3>
-            <h5>
-              {post.frontmatter?.author} in : {post.frontmatter?.category}
-            </h5>
-            <h6>{post.frontmatter?.date}</h6>
-            <hr />
-            <p>{post.excerpt}</p>
-          </article>
+          <Link key={index} to={`/blog/${post.frontmatter?.slug}`}>
+            <article>
+              <h3>{post.frontmatter?.title}</h3>
+              <h5>
+                {post.frontmatter?.author} in : {post.frontmatter?.category}
+              </h5>
+              <h6>{post.frontmatter?.date}</h6>
+              <br />
+              <p>{post.excerpt}</p>
+              <hr />
+            </article>
+          </Link>
         ))}
       </section>
     </Layout>
@@ -33,8 +36,10 @@ export const query = graphql`
           category
           title
           date(formatString: "YYYY.MM.DD")
+          slug
         }
         excerpt
+        id
       }
     }
   }
